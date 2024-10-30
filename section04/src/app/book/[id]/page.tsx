@@ -1,3 +1,4 @@
+import { BookData } from "@/types";
 import style from "./page.module.css";
 
 const mockData = {
@@ -12,20 +13,20 @@ const mockData = {
     "https://shopping-phinf.pstatic.net/main_3888828/38888282618.20230913071643.jpg",
 };
 
-export default function Page({
+export default async function Page({
   params,
 }: {
-  params: { id: string | string[] };
+  params: Promise<{ id: string | string[] }>;
 }) {
-  const {
-    id,
-    title,
-    subTitle,
-    description,
-    author,
-    publisher,
-    coverImgUrl,
-  } = mockData;
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${(await params).id}`
+  );
+  if (!response.ok) {
+    return <div>오류가 발생했습니다...</div>;
+  }
+  const book: BookData = await response.json();
+  const { id, title, subTitle, description, author, publisher, coverImgUrl } =
+    book;
 
   return (
     <div className={style.container}>
