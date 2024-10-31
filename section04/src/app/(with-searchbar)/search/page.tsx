@@ -8,7 +8,11 @@ export default async function Page({
   searchParams: Promise<{ q?: string }>;
 }) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/search?q=${searchParams}`
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/search?q=${
+      (
+        await searchParams
+      ).q
+    }`
   );
   if (!response.ok) {
     return <div>오류가 발생했습니다...</div>;
